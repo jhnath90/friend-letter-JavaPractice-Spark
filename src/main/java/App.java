@@ -8,20 +8,54 @@ import static spark.Spark.*;
 public class App {
   public static void main(String[] args) {
   	staticFileLocation("/public");
-    get("/", (request, response) -> {
-           return new ModelAndView(new HashMap(), "templates/hello.vtl");
-     }, new VelocityTemplateEngine());
+    String layout = "templates/layout.vtl";
     
 
+// ROOT PAGE
+    get("/", (request, response) -> {
+          HashMap model = new HashMap();
+          model.put("template", "templates/hello.vtl" );
+          
+          return new ModelAndView(model, layout);
+       }, new VelocityTemplateEngine());
+    
 
+// FAVORITE PHOTOS PAGE
     get("/favorite_photos", (request, response) -> {
-           return new ModelAndView(new HashMap(), "templates/favorite_photos.vtl");
-     }, new VelocityTemplateEngine());
-   
+           HashMap model = new HashMap();
+           model.put("template", "templates/favorite_photos.vtl" );
 
+           return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+   
+// RANDOM ADDED PAGE
     get("/added_page", (request, response) -> {
-           return new ModelAndView(new HashMap(), "templates/added_page.vtl");
-     }, new VelocityTemplateEngine()); 	  
+           HashMap model = new HashMap();
+           model.put("template", "templates/added_page.vtl" );
+          
+           return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine()); 	
+
+
+        get("/form", (request, response) -> {
+           HashMap model = new HashMap();
+
+           model.put("template", "templates/form.vtl");
+      
+           return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());  
+
+
+        get("/greeting_card", (request, response) -> {
+           HashMap model = new HashMap();
+           String recipient = request.queryParams("recipient");
+           String sender = request.queryParams("sender");
+
+           model.put("recipient", recipient);
+           model.put("sender", sender);
+           model.put("template", "templates/greeting_card.vtl");
+           return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
     
   }
 }
